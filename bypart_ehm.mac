@@ -1,0 +1,2 @@
+byparts(expr,x,a,db):=block([b:integrate(db,x)],
+a*b-'integrate(b*diff(a,x),x) );
