@@ -35,12 +35,13 @@ diagonalize(M):=block([val,vec],
         val:[rhs(eval[1]),rhs(eval[2])],
         vec:evec
       ),
-    if length(M) > 2 then block([i],
+    if length(M) > 2 then block([i,j,lv],
       [val,vec]: eigenvectors(M),
-      for i: 1 thru length(vec) do
-        (vec[i][1]: vec[i][1]/sqrt(vec[i][1].conjugate(vec[i][1])),
-         vec[i][1]: transpose(matrix(vec[i][1])) ),
-       vec:makelist(vec[i][1],i,1,length(M))
+      lv:last(val),lenlv:length(lv),
+      for i: 1 thru lenlv do
+        for j: 1 thru lv[i] do
+        (vec[i][j]: vec[i][j]/sqrt(vec[i][j].conjugate(vec[i][j])),
+         vec[i][j]: transpose(matrix(vec[i][j])) )
     ),
   [val,vec]
 )$
