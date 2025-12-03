@@ -1,0 +1,26 @@
+
+/***************/
+/* partial sum */
+/***************/
+psum(A,n):=block([idx],
+  idx:part(A,2),
+  sum( part(A,1) , ''idx , part(A,3) , n) )$
+
+/********************************/
+/* shanks single transformation */
+/********************************/
+shanks1(A,n):=block([pn,pnp1,pnm1,S,t1,t2],
+pn:psum(A,n), pnp1:psum(A,n+1), pnm1:psum(A,n-1),
+    t1: pnp1-pn, t2: pn-pnm1,
+    S: pnp1-t1^2/(t1-t2)
+)$
+
+/*******************************/
+/* shanks transform of order m */
+/*******************************/
+/* m = order of the shanks transform, S(S(A)), etc. */
+shanks(A,n,m):=block(
+    if m=1 then return( shanks1(A,n) ) else
+    return( shanks(A,n+1,m-1)-(shanks(A,n+1,m-1)-shanks(A,n,m-1))^2/
+        ( shanks(A,n+1,m-1)-2*shanks(A,n,m-1)+shanks(A,n-1,m-1) ) )
+)$
