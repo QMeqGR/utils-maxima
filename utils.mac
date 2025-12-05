@@ -49,7 +49,7 @@ diagonalize(M):=block([val,vec],
 /* Sort the eigenvalues and then the columns of the eigenvectors. This is
 only necessary for the builtin eigenvectors() function. My function has
 them sorted already. */
-sort_evecs(eval,evec):=block(
+sort_evecs(eval,evec):=block([seval,sE],
   seval:sort(eval),
   for i: 1 thru length(seval) do
       for j: 1 thru length(eval) do
