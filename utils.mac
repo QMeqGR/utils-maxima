@@ -7,10 +7,6 @@ random_matrix(n,r):=block(
 	genmatrix(lambda ([i, j], float(r)/2-random (float(r))),n,n)
 );
 
-/* shorthand for dgeev call */
-lapack_eigs(M):=(
-	dgeev(M,true,false)
-);
 
 /* This function diagonalizes matrices. I wrote it because eigenvectors(Sn)
 fails for some reason with Sn=S*nhat. This function punts to eigenvectors()
@@ -35,20 +31,30 @@ diagonalize(M):=block([val,vec],
         val:[rhs(eval[1]),rhs(eval[2])],
         vec:evec
       ),
-    if length(M) > 2 then block([i,j,lv],
-      [val,vec]: eigenvectors(M),
+    if length(M) > 2 then block([i,j,lv,cnt:1],
+      vec:makelist(0,i,1,length(M)),
+      [val,vec2]: uniteigenvectors(M),
       lv:last(val),lenlv:length(lv),
       for i: 1 thru lenlv do
         for j: 1 thru lv[i] do
-        (vec[i][j]: vec[i][j]/sqrt(vec[i][j].conjugate(vec[i][j])),
-         vec[i][j]: transpose(matrix(vec[i][j])) )
+         ( vec2[i][j]: transpose(matrix(vec2[i][j])),
+           vec[cnt]:vec2[i][j], cnt:cnt+1 )
     ),
   [val,vec]
 )$
 
-/* Sort the eigenvalues and then the columns of the eigenvectors. This is
-only necessary for the builtin eigenvectors() function. My function has
-them sorted already. */
+/*************************************************/
+/*         Numerical                             */
+/*************************************************/
+
+/* shorthand for dgeev call */
+lapack_eigs(M):=(
+	dgeev(M,true,false)
+);
+
+/* Sort the eigenvalues and then the columns of the eigenvectors. This function
+should be used only with the dgeev() lapack function, not the eigenvectors()
+function. */
 sort_evecs(eval,evec):=block([seval,sE],
   seval:sort(eval),
   for i: 1 thru length(seval) do
