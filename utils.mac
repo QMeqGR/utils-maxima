@@ -10,9 +10,9 @@ random_matrix(n,r):=block(
 
 /* This function diagonalizes matrices. I wrote it because eigenvectors(Sn)
 fails for some reason with Sn=S*nhat. This function punts to eigenvectors()
-when the dimension is >2. However in addition to punting to eigenvectors()
-this code also normalizes the eigenvectors. */
-diagonalize(M):=block([val,vec],
+when the dimension is >2. */
+diagonalize(M,[u]):=block([val,vec,unitvec:0],
+    if u#[] then unitvec:1, /* return unit vectors if the 2nd arg is set */
     if length(M) = 1 then return(M),
     if length(M) = 2 then block([i,N,eqlist,varlist,varsol,vtmp1,evec,eval,mag,mateq],
       eval: fullsimp( solve( charpoly(M,l), l) ),
@@ -25,15 +25,15 @@ diagonalize(M):=block([val,vec],
           varlist: makelist(concat(c,k),k,1,N),
           varsol: linsolve( subst([c1=1],eqlist[1]), c2),
           evec[i]: matrix([1],[rhs(varsol[1])]),
-          mag: sqrt( transpose(conjugate(evec[i])).evec[i] ),
-          evec[i]: evec[i]/mag
+          if unitvec=1 then ( mag: sqrt( transpose(conjugate(evec[i])).evec[i] ),
+            evec[i]: evec[i]/mag )
          ),
         val:[rhs(eval[1]),rhs(eval[2])],
         vec:evec
       ),
     if length(M) > 2 then block([i,j,lv,cnt:1],
       vec:makelist(0,i,1,length(M)),
-      [val,vec2]: uniteigenvectors(M),
+      if unitvec=1 then [val,vec2]: uniteigenvectors(M) else [val,vec2]:eigenvectors(M),
       lv:last(val),lenlv:length(lv),
       for i: 1 thru lenlv do
         for j: 1 thru lv[i] do
