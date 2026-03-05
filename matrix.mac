@@ -17,7 +17,8 @@ rref(a) := block([p, q, k, i, b, lst],
     for i : 1 thru p do
         if 0=rowsum(a,i) then 
             if false=listp(lst) then lst:makelist(i) else lst:append(lst,[i]),
-    lst:reverse(lst),
-    for i in lst do a:delrow(a,i),
+    if true=listp(lst) then lst:reverse(lst),
+    if true=listp(lst) then
+       for i in lst do a:delrow(a,i),
     a
 )$
