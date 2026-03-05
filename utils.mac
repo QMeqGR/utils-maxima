@@ -1,6 +1,7 @@
 /* load the other utils */
 load("shanks");
 load("bypart_ehm");
+load("matrix");
 
 /* create random matrix with elements between -1 and 1 */
 random_matrix(n,r):=block(

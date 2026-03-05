@@ -1,0 +1,23 @@
+delrow(A,n) := append(firstn(A, n-1), rest(A, n))$
+rowsum(A,n) := sum(A[n,i],i,1,length(A[n]));
+
+/* compute reduced row echelon form of a matrix */
+rref(a) := block([p, q, k, i, b, lst],
+    [p, q] : matrix_size(a),
+    a : echelon(a),
+    k : min(p, q),
+    for i thru min(p, q) do (
+        if a[i, i] = 0 then (k : i - 1, return())
+    ),
+    for i : k thru 2 step -1 do (
+        for j from i - 1 thru 1 step -1 do 
+            a : rowop(a, j, i, a[j, i])
+    ),
+    /* now eliminate the zero rows */
+    for i : 1 thru p do
+        if 0=rowsum(a,i) then 
+            if false=listp(lst) then lst:makelist(i) else lst:append(lst,[i]),
+    lst:reverse(lst),
+    for i in lst do a:delrow(a,i),
+    a
+)$
