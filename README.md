@@ -18,6 +18,7 @@ rref(A) -- compute reduced row echelon form and drop zero rows
 shanks:
 
 psum(A,n) -- nth partial sum of a summed expression
+
 shanks1(A,n) -- perform a single shanks transformation (nth partial sum)
 
 shanks(A,n,m) -- perform a shanks transformation of order m
