@@ -2,7 +2,7 @@
 
 This repo contains minor utilities that I find useful.
 
-*integration:*
+**integration:**
 
 byparts(expr,a,db,x) -- integration by parts for an expression. User
 inputs a, db parts of the expression. Does not evaluate the
@@ -20,7 +20,7 @@ byparts4(expr,a,db,x,l,u) -- integration by parts for an expression
 with limits. User inputs a, db parts of the expression and upper and
 lower limits. Evaluates the integrate(b*diff(a,x),x) integral.
 
-*matrix:*
+**matrix:**
 
 delrow(A,n) -- delete row n from matrix A
 
@@ -28,7 +28,7 @@ rowsum(A,n) -- compute sum of row n elements
 
 rref(A) -- compute reduced row echelon form and drop zero rows
 
-*shanks:*
+**shanks:**
 
 psum(A,n) -- nth partial sum of a summed expression
 
@@ -36,7 +36,7 @@ shanks1(A,n) -- perform a single shanks transformation (nth partial sum)
 
 shanks(A,n,m) -- perform a shanks transformation of order m
 
-*utils:*
+**utils:**
 
 random_matrix(n,r) -- create n x n floating point matrix with elements
 between -r and r.
@@ -47,7 +47,7 @@ eigenvectors() call fails. For n >= 3 this function just calls the built-in
 eigenvectors(). If you provide an additional argument 1, the eigenvectors
 will be normalized.
 
-*LAPACK:*
+**LAPACK:**
 
 lapack_eigs(M) -- calls dgeev on matrix M. load(lapack) is required.
 
