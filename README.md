@@ -4,7 +4,11 @@ This repo contains minor utilities that I find useful.
 
 **integration:**
 
+The elementary integration by parts formula is
+
 \int a db = a b - \int b da
+
+The following functions perform integration by parts:
 
 byparts(a,db,x) -- integration by parts for an expression. User
 inputs a, db parts of the expression. Does not evaluate the
