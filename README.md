@@ -4,19 +4,21 @@ This repo contains minor utilities that I find useful.
 
 **integration:**
 
-byparts(expr,a,db,x) -- integration by parts for an expression. User
+\int a db = a b - \int b da
+
+byparts(a,db,x) -- integration by parts for an expression. User
 inputs a, db parts of the expression. Does not evaluate the
 integrate(b*diff(a,x),x) integral.
 
-byparts2(expr,a,db,x) -- integration by parts for an expression. User
+byparts2(a,db,x) -- integration by parts for an expression. User
 inputs a, db parts of the expression. Evaluates the
 integrate(b*diff(a,x),x) integral.
 
-byparts3(expr,a,db,x,l,u) -- integration by parts for an expression
+byparts3(a,db,x,l,u) -- integration by parts for an expression
 with limits. User inputs a, db parts of the expression and upper and
 lower limits. Does not evaluate the integrate(b*diff(a,x),x) integral.
 
-byparts4(expr,a,db,x,l,u) -- integration by parts for an expression
+byparts4(a,db,x,l,u) -- integration by parts for an expression
 with limits. User inputs a, db parts of the expression and upper and
 lower limits. Evaluates the integrate(b*diff(a,x),x) integral.
 

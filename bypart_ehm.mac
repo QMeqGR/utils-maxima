@@ -1,20 +1,20 @@
 /* if no limits */
-byparts(expr,a,db,x):=block([b:integrate(db,x),A],
+byparts(a,db,x):=block([b:integrate(db,x),A],
 A:a*b-'integrate(b*diff(a,x),x),
 factor(expand(A)));
 
 /* no limits, evaluate final integral */
-byparts2(expr,a,db,x):=block([b:integrate(db,x),A],
+byparts2(a,db,x):=block([b:integrate(db,x),A],
 A:a*b-integrate(b*diff(a,x),x),
 factor(expand(A)));
 
 /* if using limits, return last integral unevaluated */
-byparts3(expr,a,db,x,l,u):=block([b:integrate(db,x),A],
+byparts3(a,db,x,l,u):=block([b:integrate(db,x),A],
 A:limit(a*b,x,u)-limit(a*b,x,l)-'integrate(diff(a,x)*b,x,l,u),
     factor(expand(A)) );
 
 /* if using limits, return last integral evaluated */
-byparts4(expr,a,db,x,l,u):=block([b:integrate(db,x),A],
+byparts4(a,db,x,l,u):=block([b:integrate(db,x),A],
 A:limit(a*b,x,u)-limit(a*b,x,l)-integrate(diff(a,x)*b,x,l,u),
     factor(expand(A)) );
 
