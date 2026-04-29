@@ -19,3 +19,48 @@ A:limit(a*b,x,u)-limit(a*b,x,l)-integrate(diff(a,x)*b,x,l,u),
     factor(expand(A)) );
 
 alias(ibp1,byparts,ibp2,byparts2,ibp3,byparts3,ibp4,byparts4);
+
+/********************************************/
+/* The following is a more comprehensive
+attempt to cycle through all possible single
+factors and attempt integration by parts.
+This version does not take limits. */
+ibp_get_factors(expr) := block(
+    [n, d, n_list, d_list],
+    n : num(expr),
+    d : denom(expr),
+    
+    /* Turn the numerator into a list of factors */
+    if atom(n) then n_list : [n]
+    else if op(n) = "*" then n_list : args(n)
+    else n_list : [n],
+    
+    /* Turn the denominator into a list of factors with -1 exponents */
+    if d = 1 then d_list : []
+    else if atom(d) then d_list : [d^-1]
+    else if op(d) = "*" then d_list : map(lambda([x], x^-1), args(d))
+    else d_list : [d^-1],
+    
+    append(n_list, d_list)
+)$
+
+/* cycles a list to the left */
+ibp_cycle_left(L) := append(rest(L), [first(L)]);
+
+/* the first element of the list will be db,
+and the rest will be a */
+ibp_combine_a(L):=block([n:length(L)],
+    if n=2 then return( [L[1],L[2]] ),
+    if n>=3 then return( [product(L[i],i,2,n),L[1]])
+)$
+
+int_bp(expr,x):=block([ff,ft,a,db,ans,out:[]],
+    ff: ibp_get_factors(expr),
+    for i:1 thru length(ff) do
+        (ft:ibp_cycle_left(ff), ff:ft,
+            a_db:ibp_combine_a(ft),
+            ans:ibp2(a_db[1],a_db[2],x),
+            ans:factor( expand(ans)),
+            out:append(out,[ans])),
+            out
+)$

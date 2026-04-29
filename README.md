@@ -26,6 +26,22 @@ byparts4(a,db,x,l,u) -- integration by parts for an expression
 with limits. User inputs a, db parts of the expression and upper and
 lower limits. Evaluates the integrate(b*diff(a,x),x) integral.
 
+int_bp(expr,x) -- more sophisticated integration by parts that
+tries every single multiplicative factor as db and the rest as
+a, and then return a list with output for each db tried. This
+version does not work with limits of integration.
+
+example:
+(%i4) k: x^2*exp(3*x);
+                                     3 x  2
+(%o4)                              %e    x
+(%i5) int_bp(k,x);
+                  3 x     2               3 x     2
+                %e    (9 x  - 6 x + 2)  %e    (9 x  - 6 x + 2)
+(%o5)          [----------------------, ----------------------]
+                          27                      27
+
+
 **matrix:**
 
 delrow(A,n) -- delete row n from matrix A
