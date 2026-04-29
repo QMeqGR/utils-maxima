@@ -32,6 +32,7 @@ a, and then return a list with output for each db tried. This
 version does not work with limits of integration.
 
 example:
+```
 (%i4) k: x^2*exp(3*x);
                                      3 x  2
 (%o4)                              %e    x
@@ -40,7 +41,7 @@ example:
                 %e    (9 x  - 6 x + 2)  %e    (9 x  - 6 x + 2)
 (%o5)          [----------------------, ----------------------]
                           27                      27
-
+```
 
 **matrix:**
 
