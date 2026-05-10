@@ -26,10 +26,11 @@ byparts4(a,db,x,l,u) -- integration by parts for an expression
 with limits. User inputs a, db parts of the expression and upper and
 lower limits. Evaluates the integrate(b*diff(a,x),x) integral.
 
-int_bp(expr,x) -- more sophisticated integration by parts that
-tries every single multiplicative factor as db and the rest as
-a, and then return a list with output for each db tried. This
-version does not work with limits of integration.
+int_bp(expr,x) -- more sophisticated integration by parts that tries
+every single multiplicative factor as db and the rest as a, and then
+return a list with output for each db tried. Optional limit arguments
+can be added: int_bp(expr,x,xlo,xhi).
+
 
 example:
 ```
