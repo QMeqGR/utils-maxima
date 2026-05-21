@@ -63,5 +63,5 @@ int_bp(expr,x,[L]):=block([ff,ft,a,db,ans,out:[]],
             else ans:ibp2(a_db[1],a_db[2],x),
             ans:factor( expand(ans)),
             out:append(out,[ans])),
-            out
+            unique(out)
 )$
