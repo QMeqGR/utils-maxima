@@ -6,9 +6,9 @@ This repo contains minor utilities that I find useful.
 
 The elementary integration by parts formula is
 
-$$
+```math
 \int a\, db = a b - \int b\, da
-$$
+```
 
 The following functions perform integration by parts:
 
