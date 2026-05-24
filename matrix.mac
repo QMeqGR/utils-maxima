@@ -23,3 +23,182 @@ rref(a) := block([p, q, k, i, b, lst],
        ),
     a
 )$
+
+/* create random matrix with elements between -1 and 1 */
+random_matrix(n,r):=block(
+	genmatrix(lambda ([i, j], float(r)/2-random (float(r))),n,n)
+);
+
+
+/* This function diagonalizes matrices. I wrote it because eigenvectors(Sn)
+fails for some reason with Sn=S*nhat. This function calls eigenvectors_fix()
+when the dimension is >2. */
+diagonalize(M,[u]):=block([val,vec,unitvec:0],
+    if u#[] then unitvec:1, /* return unit vectors if the 2nd arg is set */
+    if length(M) = 1 then return(M),
+    if length(M) = 2 then block([i,N,eqlist,varlist,varsol,vtmp1,evec,eval,mag,mateq],
+      eval: fullsimp( solve( charpoly(M,l), l) ),
+      N: length(eval),
+      evec: makelist(0,k,1,N),
+      for i:1 thru N do /* loop over the eigenvals */
+        ( vtmp1: transpose( matrix(makelist(concat(c,k),k,1,N) ) ),
+          mateq: M.vtmp1-rhs(eval[i])*vtmp1,
+          eqlist: makelist(mateq[k][1],k,1,N),
+          varlist: makelist(concat(c,k),k,1,N),
+          varsol: linsolve( subst([c1=1],eqlist[1]), c2),
+          evec[i]: matrix([1],[rhs(varsol[1])]),
+          if unitvec=1 then ( mag: sqrt( transpose(conjugate(evec[i])).evec[i] ),
+            evec[i]: evec[i]/mag )
+         ),
+        val:[rhs(eval[1]),rhs(eval[2])],
+        vec:evec
+      ),
+    if length(M) > 2 then block([i,j,lv,cnt:1], load("eigen"),
+      vec:makelist(0,i,1,length(M)),
+      if unitvec=1 then [val,vec2]: uniteigenvectors_fix(M) else [val,vec2]:eigenvectors_fix(M),
+      lv:last(val),lenlv:length(lv),
+      for i: 1 thru lenlv do
+        for j: 1 thru lv[i] do
+         ( vec2[i][j]: transpose(matrix(vec2[i][j])),
+           vec[cnt]:vec2[i][j], cnt:cnt+1 )
+    ),
+  [val,vec]
+)$
+
+/*
+eigivenvectors_fix and uniteigenvectors_fix are taken from share/matrix/eigen.mac.
+The fix essentially replaces algsys with linsolve, and fixes the trouble with not
+finding some eigenvectors. 
+*/
+eigenvectors_fix(mat) := block([
+  eigvecs, equations, unknowns, solution,
+  eigvals, dimnsn, count,
+  vectr, index1, index2, index3, index4,
+  matrx, mmatrx, notknwn,
+  unit, multiplicities,
+  %rnum, realonly, algebraic,
+  interm, intern],
+  
+  local(solution, mmatrx),
+  mode_declare(
+    [equations, unknowns, solution, eigvals, unit, interm], list,
+    [dimnsn, count, index1, index2, index3, index4], fixnum,
+    [vectr, matrx, mmatrx, intern, notknwn], any
+    ),
+  unknowns : [],
+  dimnsn  : mi(length(mat)),
+  count   : mi(dimnsn),
+  notknwn : ?gensym(),
+  mat : rationalize(mat),
+  if knowneigvals then
+  eigvals : listeigvals
+  else
+  eigvals : eigenvalues(mat),
+  
+  if eigvals = [] then (
+    nondiagonalizable : true,
+    return(eigvals)
+    )
+  else (
+    multiplicities : part(eigvals, 2),
+    count : length(multiplicities),
+    for index1 thru dimnsn do
+    unknowns : endcons(
+      concat(notknwn, index1),
+      unknowns
+      ),
+    vectr : columnvector(unknowns),
+    matrx : mat . vectr,
+    nondiagonalizable : false,
+    eigvecs : [],
+    realonly : false,
+    algebraic : true,
+    for index1 thru count do (
+      /* Original form:
+      mmatrx : matrx - part(eigvals,1,index1) * vectr
+      */
+      mmatrx :
+      (
+        mat
+        - part(eigvals, 1, index1) * ident(dimnsn)
+        ) . vectr,
+      equations : [],
+      for index2 thru dimnsn do
+      equations : cons(
+        mmatrx[index2, 1],
+        equations
+        ),
+      %rnum : 0,
+      solution : linsolve(equations, unknowns),
+      interm : map('rhs, solution),
+      %rnum_list : [],
+      for index3 thru %rnum do
+      %rnum_list :
+      endcons(
+        concat(%r, index3),
+        %rnum_list
+        ),
+      unit : [],
+      if %rnum # part(multiplicities, index1) then
+      nondiagonalizable : true,
+      for index3 thru %rnum do (
+        intern :
+        substvectk(
+          %rnum_list,
+          index3,
+          interm
+          ),
+        unit : append(unit, [intern])
+        ),
+      if unit = [] then (
+        print(" "),
+        print(
+          "eigenvectors: the eigenvector(s) for the",
+          index1,
+          "th eigenvalue will be missing."
+          )
+        ),
+      if hermitianmatrix and %rnum > 1 then
+      unit : gramschmidt(unit),
+      eigvecs : append(eigvecs, [unit])
+      ),
+    return([eigvals, eigvecs])
+    )
+)$
+
+uniteigenvectors_fix(M):= block ([uv], local(uv),
+    mode_declare (uv, list, [i, j], fixnum),
+
+    if knowneigvects
+        then uv : copy (listeigvects)
+        else uv : copy (eigenvectors_fix (M)),
+
+    if uv = []
+        then []
+        else
+           (for i thru length (uv[2])
+                do for j thru length (uv[2][i])
+                    /* modification in-place (OK due to copy above) */
+                    do uv[2][i][j] : ratsimp (unitvector (uv[2][i][j])),
+            uv));
+
+
+/*************************************************/
+/*         Numerical                             */
+/*************************************************/
+
+/* shorthand for dgeev call */
+lapack_eigs(M):=(
+	dgeev(M,true,false)
+);
+
+/* Sort the eigenvalues and then the columns of the eigenvectors. This function
+should be used only with the dgeev() lapack function, not the eigenvectors()
+function. */
+sort_evecs(eval,evec):=block([seval,sE],
+  seval:sort(eval),
+  for i: 1 thru length(seval) do
+      for j: 1 thru length(eval) do
+          ( if i=1 and seval[i]=eval[j] then sE:col(evec,j),
+            if i#1 and seval[i]=eval[j] then sE:addcol(sE,col(evec,j)) ),
+[seval,sE]);

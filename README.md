@@ -66,9 +66,12 @@ random_matrix(n,r) -- create n x n floating point matrix with elements
 between -r and r.
 
 diagonalize(M) -- diagonalize matrix M and return both eigenvalues and
-eigenvectors. For 2x2 matrices this returns answers were the built-in
-eigenvectors() call fails. For n >= 3 this function just calls the built-in
-eigenvectors(). If you provide an additional argument 1, the eigenvectors
+eigenvectors. For 2x2 matrices this returns answers where the built-in
+eigenvectors() call fails. For n >= 3 this function just calls a modified
+eigenvectors() called eigenvectors_fix(). This is essentially the eigenvectors()
+function in share/matrix/eigen.mac but with algsys replaced with linsolve. It fixes
+the issue just mentioned.
+If you provide an additional argument 1, the eigenvectors
 will be normalized.
 
 **LAPACK:**
