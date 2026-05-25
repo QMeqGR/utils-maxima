@@ -30,8 +30,8 @@ lower limits. Evaluates the integrate(b*diff(a,x),x) integral.
 
 int_bp(expr,x) -- more sophisticated integration by parts that tries
 every single multiplicative factor as db and the rest as a, and then
-return a list with output for each db tried. Optional limit arguments
-can be added: int_bp(expr,x,xlo,xhi).
+return a list with output of each db tried (only unique entries are
+shown). Optional limit arguments can be added: int_bp(expr,x,xlo,xhi).
 
 
 example:
@@ -40,10 +40,10 @@ example:
                                      3 x  2
 (%o4)                              %e    x
 (%i5) int_bp(k,x);
-                  3 x     2               3 x     2
-                %e    (9 x  - 6 x + 2)  %e    (9 x  - 6 x + 2)
-(%o5)          [----------------------, ----------------------]
-                          27                      27
+                  3 x     2 
+                %e    (9 x  - 6 x + 2)
+(%o5)          [----------------------]
+                          27 
 ```
 
 **matrix:**
@@ -69,12 +69,11 @@ between -r and r.
 
 diagonalize(M) -- diagonalize matrix M and return both eigenvalues and
 eigenvectors. For 2x2 matrices this returns answers where the built-in
-eigenvectors() call fails. For n >= 3 this function just calls a modified
-eigenvectors() called eigenvectors_fix(). This is essentially the eigenvectors()
-function in share/matrix/eigen.mac but with algsys replaced with linsolve. It fixes
-the issue just mentioned.
-If you provide an additional argument 1, the eigenvectors
-will be normalized.
+eigenvectors() call fails. For n >= 3 this function calls a modified
+eigenvectors() called eigenvectors_fix(). This is essentially the
+eigenvectors() function in share/matrix/eigen.mac but with algsys
+replaced with linsolve. It fixes the issue just mentioned. If you
+provide an additional argument 1, the eigenvectors will be normalized.
 
 **LAPACK:**
 
