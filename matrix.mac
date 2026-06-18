@@ -30,8 +30,8 @@ random_matrix(n,r):=block(
 );
 
 
-/* This function diagonalizes matrices. I wrote it because eigenvectors(Sn)
-fails for some reason with Sn=S*nhat. This function calls eigenvectors_fix()
+/* This function diagonalizes matrices.
+This function calls eigenvectors_fix()
 when the dimension is >2. */
 diagonalize(M,[u]):=block([val,vec,unitvec:0],
     if u#[] then unitvec:1, /* return unit vectors if the 2nd arg is set */
@@ -67,8 +67,7 @@ diagonalize(M,[u]):=block([val,vec,unitvec:0],
 
 /*
 eigivenvectors_fix and uniteigenvectors_fix are taken from share/matrix/eigen.mac.
-The fix essentially replaces algsys with linsolve, and fixes the trouble with not
-finding some eigenvectors. 
+The fix essentially replaces algsys with linsolve.
 */
 eigenvectors_fix(mat) := block([
   eigvecs, equations, unknowns, solution,
